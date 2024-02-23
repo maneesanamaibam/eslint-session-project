@@ -77,7 +77,7 @@ function App(): React.ReactNode {
     color: "white",
   };
 
-const resolveAndSetLater=(promise:Promise<unknown>)=>{
+const resolveAndSetLater=(promise:Promise<unknown>):void=>{
 promise.then((data)=>{
   setRunCodeOutput(`OUTPUT: ${JSON.stringify(data)}`)
  })
@@ -96,7 +96,7 @@ promise.then((data)=>{
     setRunCodeOutput(result);
   };
 
-  const selectRuleHandler = (e: ChangeEvent<HTMLSelectElement>) => {
+  const selectRuleHandler = (e: ChangeEvent<HTMLSelectElement>):void=> {
     setEslintRuleName(e.target.value as ExampleESLintRuleNames);
   };
 
@@ -124,7 +124,7 @@ promise.then((data)=>{
           <div className="code-tabs">
             <span
               style={
-                tabSelected?.isTabSelected &&
+                tabSelected.isTabSelected &&
                 tabSelected.tabName === CODE_TABS.BAD_CODE
                   ? codeTabCSSStyle
                   : {}
@@ -141,7 +141,7 @@ promise.then((data)=>{
             </span>
             <span
               style={
-                tabSelected?.isTabSelected &&
+                tabSelected.isTabSelected &&
                 tabSelected.tabName === CODE_TABS.GOOD_CODE
                   ? codeTabCSSStyle
                   : {}

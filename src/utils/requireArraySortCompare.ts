@@ -11,7 +11,7 @@ import { CODE_TABS } from "../constants/codeExamples";
 function goodCode(): number[] {
   //GOOD CODE
   const arr: number[] =[1,12,110,23];
-  const compareFn = (a: number, b: number) => a - b;
+  const compareFn = (a: number, b: number):number => a - b;
   arr.sort(compareFn);
   return arr;
 }

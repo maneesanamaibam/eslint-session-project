@@ -34,9 +34,9 @@ async function goodCode():Promise<Photo[]>{
     for(const id of photosIds){
         photos.push(fetchPhoto(id))
     }
-const result= await Promise.all(photos)
-console.log("Good Code",result)
-return result
+return await Promise.all(photos)
+
+
 }
 
 export default {
