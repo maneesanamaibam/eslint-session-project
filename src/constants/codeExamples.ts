@@ -1,4 +1,4 @@
-// eslint-disable-next-line no-shadow
+
 export enum ExampleESLintRuleNames {
   NO_ARRAY_SORT_COMPARE = "require-array-sort-compare",
   NO_IMPLIED_EVAL = "no-implied-eval",
@@ -10,28 +10,31 @@ export enum CODE_TABS {
   BAD_CODE = "badCode",
   GOOD_CODE = "goodCode",
 }
-type ExampleCode = `${CODE_TABS}Example`;
-interface CodeExample {
-  [key in ExampleCode]: string;
-  ruleName: ExampleESLintRuleNames;
-  goodCodeExample: string;
+type ExampleCode = {
+  [key in CODE_TABS as `${key}Example`]: string;
+};
+
+type CodeExample ={ 
   description: string;
-}
+  ruleName: ExampleESLintRuleNames;
+} & ExampleCode 
+
+
 export const codeExamples: {
   [key in ExampleESLintRuleNames]: CodeExample;
-} = {
+}  = {
   [ExampleESLintRuleNames.NO_ARRAY_SORT_COMPARE]: {
     ruleName: ExampleESLintRuleNames.NO_ARRAY_SORT_COMPARE,
     [`${CODE_TABS.BAD_CODE}Example`]: `
     //BAD CODE [newline]
-    const arr: number[] = [132, 234, 13, 64, 35, 16, 37, 78, 9, 10]; [newline]
+    const arr: number[] = [1,12,110,23]; [newline]
     arr.sort(); [newline]
     `,
-    goodCodeExample: `
-    // GOOD CODE
-     const arr: number[] = [132, 234, 13, 64, 35, 16, 37, 78, 9, 10];
-     const compareFn = (a: number, b: number) => a - b;
-     arr.sort(compareFn);
+    [`${CODE_TABS.GOOD_CODE}Example`]: `
+    // GOOD CODE [newline]
+     const arr: number[] = [1,12,110,23]; [newline]
+     const compareFn = (a: number, b: number) => a - b; [newline]
+     arr.sort(compareFn); [newline]
     `,
     description: ``,
   },
@@ -39,13 +42,13 @@ export const codeExamples: {
     ruleName: ExampleESLintRuleNames.NO_IMPLIED_EVAL,
     [`${CODE_TABS.BAD_CODE}Example`]: `
 // BAD CODE [newline]
- setTimeout("alert('Hi!');", 100); [newline]
+ setTimeout("alert('Hi! BAD CODE');", 100); [newline]
     `,
-    goodCodeExample: `
-    // GOOD CODE
-    setTimeout(() => {
-     alert("Hi!");
-    }, 100);
+    [`${CODE_TABS.GOOD_CODE}Example`]: `
+    // GOOD CODE [newline]
+    setTimeout(() => { [newline]
+     alert("Hi! GOOD CODE"); [newline]
+    }, 100); [newline]
     `,
     description: ``,
   },
@@ -53,35 +56,77 @@ export const codeExamples: {
     ruleName: ExampleESLintRuleNames.PREFER_OPTIONAL_CHAIN,
     [`${CODE_TABS.BAD_CODE}Example`]: `
     // BAD CODE [newline]
-    const obj = { a: "a" }; [newline]
+    type ExampleObject={ [newline]
+      a?: {  b?: {  c: string   }  } [newline]     
+  } [newline]
+   
+    const obj:ExampleObject = {  [newline]
+      a: { b: {   [newline]
+        c: "I am returning from ExampleObject as string [BAD CODE]" [newline]
+      } } [newline]
+    }; [newline]  
     const val = obj && obj.a && obj.a.b && obj.a.b.c; [newline]
      `,
-    goodCodeExample: `
+     [`${CODE_TABS.GOOD_CODE}Example`]: `
     // GOOD CODE [newline]
-    const obj = { a: "a" }; [newline]
+    type ExampleObject={ [newline]
+      a?: {  b?: {  c: string   }  } [newline]     
+  } [newline]
+    const obj:ExampleObject = {  [newline]
+      a: { b: {   [newline]
+        c: "I am returning from ExampleObject as string [GOOD CODE]" [newline]
+      } } [newline]
+    }; [newline] 
     const val = obj?.a?.b?.c; [newline]
     `,
     description: ``,
   },
+
   [ExampleESLintRuleNames.NO_AWAIT_IN_LOOP]: {
     ruleName: ExampleESLintRuleNames.NO_AWAIT_IN_LOOP,
     [`${CODE_TABS.BAD_CODE}Example`]: `
- // BAD CODE [newline]
- async function foo(things) { [newline]
-   const results = []; [newline]
-   for (const thing of things) { [newline] 
-   
-     results.push(await bar(thing)); [newline]
-   } [newline]
-   return baz(results); [newline]
- }
+    // BAD CODE [newline]
+type Photo={ [newline]
+  albumId: number; [newline]
+  id: number; [newline]
+  title: string; [newline]
+  url: string; [newline]
+  thumbnailUrl: string; [newline]
+} [newline]
+const fetchPhoto=(id:number):Promise<Photo>=>{ [newline] 
+  return fetch("https://jsonplaceholder.typicode.com/photos/"+id) [newline]
+  .then(response=>response.json()) [newline]
+} [newline]
+const photosIds=[100,200,300] [newline]
+
+ const photos:Photo[]=[] [newline]
+ for(const id of photosIds){ [newline]
+     photos.push(await fetchPhoto(id)) [newline]
+ } [newline]
+ return photos [newline]
     `,
-    goodCodeExample: `
-    // GOOD CODE
-     const arr: number[] = [132, 234, 13, 64, 35, 16, 37, 78, 9, 10];
-     const compareFn = (a: number, b: number) => a - b;
-     arr.sort(compareFn);
+    [`${CODE_TABS.GOOD_CODE}Example`]: `
+    // GOOD CODE [newline]
+    type Photo={ [newline]
+      albumId: number; [newline]
+      id: number; [newline]
+      title: string; [newline]
+      url: string; [newline]
+      thumbnailUrl: string; [newline]
+    } [newline]
+    const fetchPhoto=(id:number):Promise<Photo>=>{ [newline]
+      return fetch("https://jsonplaceholder.typicode.com/photos/"+id) [newline]
+      .then(response=>response.json()) [newline]
+    } [newline]
+    const photosIds=[400,500,600] [newline]
+    
+    const photos:Promise<Photo>[]=[] [newline]
+    for(const id of photosIds){ [newline]
+        photos.push(fetchPhoto(id)) [newline]
+    } [newline]
+    return  await Promise.all(photos) [newline]
     `,
     description: ``,
-  },
+  }
+
 };

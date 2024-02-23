@@ -1,13 +1,11 @@
 import React, { ChangeEvent, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
-import testFunctions from "./utils";
 import {
   CODE_TABS,
   ExampleESLintRuleNames,
   codeExamples,
 } from "./constants/codeExamples";
+import testFunctions from "./utils";
+import "./App.css";
 
 const simpleCodeFormatter = (codeSnippet: string): string[] => {
   return codeSnippet.split("[newline]");
@@ -29,15 +27,29 @@ const CodeOutput = ({
     </>
   );
 };
+const getRandomRGB = (): string => {
+  const r = Math.floor(30+Math.random() * 100);
+  const g = Math.floor(30+Math.random() * 100);
+  const b = Math.floor(30+Math.random() * 100);
+  return `rgb(${r},${g},${b})`;
 
-const CodeInput = ({ inputCode }: { inputCode: string }): React.ReactNode => {
+}
+
+const CodeInput = React.memo(({ inputCode }: { inputCode: string }): React.ReactNode => {
   return (
     <>
       <div>Input Code</div>
       <div className="code-container">
         {simpleCodeFormatter(inputCode).map((line, index) => {
           return (
-            <div className="code-line" key={index}>
+            <div style={
+              {
+                backgroundImage: `linear-gradient(to right, ${getRandomRGB()}, ${getRandomRGB()})`,
+                backgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                fontWeight: 400
+              }
+            }  key={index}>
               {line}
             </div>
           );
@@ -45,7 +57,7 @@ const CodeInput = ({ inputCode }: { inputCode: string }): React.ReactNode => {
       </div>
     </>
   );
-};
+})
 
 function App(): React.ReactNode {
   const [runCodeOutput, setRunCodeOutput] = useState("output");
@@ -57,16 +69,29 @@ function App(): React.ReactNode {
   const [tabSelected, setTabSelected] = useState<{
     isTabSelected: boolean;
     tabName: CODE_TABS;
-  } | null>(null);
+  }>({ isTabSelected: true,
+    tabName: CODE_TABS.BAD_CODE}  );
 
   const codeTabCSSStyle = {
-    backgroundColor: "green",
+    backgroundColor: tabSelected.tabName === CODE_TABS.GOOD_CODE ? "green" : "#DE3939",
     color: "white",
   };
 
+const resolveAndSetLater=(promise:Promise<unknown>)=>{
+promise.then((data)=>{
+  setRunCodeOutput(`OUTPUT: ${JSON.stringify(data)}`)
+ })
+}
   const runCodeHandler = (): void => {
+   const codeResultFn =testFunctions[eslintRuleName][tabSelected.tabName]
+    const isPromise = typeof codeResultFn() === 'object' && typeof (codeResultFn() as Promise<unknown>).then === 'function'
+   if(isPromise){
+    resolveAndSetLater(codeResultFn() as Promise<unknown>)
+    return
+   }
+   const codeResult=testFunctions[eslintRuleName][tabSelected.tabName]()
     const result = `OUTPUT: ${JSON.stringify(
-      testFunctions[ExampleESLintRuleNames.NO_ARRAY_SORT_COMPARE]()
+      codeResult || "No Output"
     )}`;
     setRunCodeOutput(result);
   };
@@ -132,7 +157,7 @@ function App(): React.ReactNode {
               Good Code
             </span>
           </div>
-          <CodeInput inputCode={codeExamples[eslintRuleName].badCodeExample} />
+          <CodeInput inputCode={codeExamples[eslintRuleName][`${tabSelected.tabName}Example`]} />
           <button onClick={runCodeHandler} className="run-code-button">
             Run Code
           </button>
@@ -140,7 +165,6 @@ function App(): React.ReactNode {
         <div>
           <CodeOutput outputCode={runCodeOutput} />
           <span className="filler"></span>
-          {/* <button>Output</button> */}
         </div>
       </div>
     </>

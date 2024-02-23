@@ -65,9 +65,7 @@
 .code-tabs {
   margin: 20px;
 }
-.code-line {
-  color: #646cffaa;
-}
+
 .code-line:first-child {
   color: rgb(69, 130, 109) !important;
 }
@@ -89,6 +87,7 @@
   min-width: 450px;
   min-height: 120px;
   margin-bottom: 15px;
+  font-size: 18px;
 }
 
 .filler {
