@@ -23,11 +23,13 @@ function badCode(): undefined |  string {
 
 function goodCode():undefined | string {
     // GOOD CODE [newline]
-    const obj:ExampleObject = {
+    const obj:{
+        [key:string]:unknown
+    } = {
         a: {
             b: {
                 c: "I am returning from ExampleObject as string [GOOD CODE]",
-            },
+            }, 
         },
     };
     const val = obj?.a?.b?.c;
