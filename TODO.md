@@ -1,33 +1,34 @@
-1. Initial State of a react project integrated with eslint.
-  
-  Describe an overview of the project file structure
-  
-  - Eslint Config file ---
-    
-  - tsconfig.json
-    
+1. Install packages necessary for eslint-config-js-ts integration
 
-Come up to ESLint Shareable configuration -- the product
+```js
+ npm install --save-dev eslint@8.56.0 typescript git+https://github.com/CovalienceGithub/eslint-config-js-ts.git @typescript-eslint/parser@^6.21.0 @typescript-eslint/eslint-plugin@^6.21.0
+```
 
-How to easily integrate the shareable configuration
+2. Create/Update .eslintrc.js file
 
-3 rules explaination
+```diff
+extends:[
++ 'eslint-config-js-ts'
+],
+parserOptions:{
++ project: ['./tsconfig.json','./tsconfig.node.json'],
+}
+```
 
-- Showcase the importance of eslint rules -- how it help in a project
-  
-- What kind of rules do we want to enforce
-  
+3. Update tsconfig.json
 
-ESLint Cli commands
+```diff
++ "strictNullChecks":true
+```
 
-- how to run eslint cli to see if there is any errors and warning
-  
-- how to fix auto fixable
-  
-  ESLint formatter
-  
-  How to ignore files
-  
-- ESlint and Prettier rules conflicts:
-  
-  How to resolve the issue ?
+4. Update package.json
+
+```diff
+{
+  "scripts": {
++ "lint": "eslint . --ext ts,tsx --report-unused-disable-directives ",
++ "lint:fix": "eslint . --fix",
++ "lint:format": "eslint . --format html --output-file output.html"
+
+  }
+```

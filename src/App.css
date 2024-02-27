@@ -86,14 +86,10 @@
   background-color: #d6d7edaa;
   min-width: 450px;
   min-height: 120px;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   font-size: 18px;
 }
 
-.filler {
-  padding: 18px;
-  display: block;
-}
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
